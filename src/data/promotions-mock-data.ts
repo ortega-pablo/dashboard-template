@@ -1,0 +1,376 @@
+// Mock data structure for promotions dashboard
+// This will be used to populate all dashboard elements as if it were an API response
+
+export interface Promotion {
+  id: number;
+  title: string;
+  brand: string;
+  country: string;
+  category: string;
+  mechanic: string;
+  prize: string;
+  concept: string;
+  license?: string;
+}
+
+export interface PromoTypeRanking {
+  rank: number;
+  title: string;
+  brand: string;
+  promotions: Promotion[];
+}
+
+export interface PromoTypeData {
+  transaccional: PromoTypeRanking[];
+  engagement: PromoTypeRanking[];
+}
+
+// Mock promotions data
+export const mockPromotionsData: PromoTypeData = {
+  transaccional: [
+    {
+      rank: 1,
+      title: "Compra y gana viaje",
+      brand: "Coca-Cola",
+      promotions: [
+        {
+          id: 1,
+          title: "Gana un viaje a París",
+          brand: "Coca-Cola",
+          country: "MX",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Viaje",
+          concept: "Deportes",
+        },
+        {
+          id: 2,
+          title: "Viaje al Mundial FIFA",
+          brand: "Coca-Cola",
+          country: "BR",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Viaje",
+          concept: "Deportes",
+        },
+        {
+          id: 3,
+          title: "Vacaciones en Dubai",
+          brand: "Coca-Cola",
+          country: "AR",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Viaje",
+          concept: "Celebridades",
+        },
+        {
+          id: 4,
+          title: "Tour por Europa",
+          brand: "Coca-Cola",
+          country: "CL",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Viaje",
+          concept: "Música",
+        },
+        {
+          id: 5,
+          title: "Aventura en Tokio",
+          brand: "Coca-Cola",
+          country: "CO",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Viaje",
+          concept: "Deportes",
+        },
+      ],
+    },
+    {
+      rank: 2,
+      title: "Acumula puntos",
+      brand: "Lay's",
+      promotions: [
+        {
+          id: 6,
+          title: "Colecciona y gana",
+          brand: "Lay's",
+          country: "MX",
+          category: "Snacks",
+          mechanic: "Colecciona",
+          prize: "Producto",
+          concept: "Deportes",
+        },
+        {
+          id: 7,
+          title: "Puntos por compra",
+          brand: "Lay's",
+          country: "BR",
+          category: "Snacks",
+          mechanic: "Instante",
+          prize: "Efectivo",
+          concept: "Celebridades",
+        },
+        {
+          id: 8,
+          title: "Acumula y canjea",
+          brand: "Lay's",
+          country: "AR",
+          category: "Snacks",
+          mechanic: "Colecciona",
+          prize: "Producto",
+          concept: "Música",
+        },
+        {
+          id: 9,
+          title: "Premia tu lealtad",
+          brand: "Lay's",
+          country: "CL",
+          category: "Snacks",
+          mechanic: "Instante",
+          prize: "Experiencia",
+          concept: "Deportes",
+        },
+        {
+          id: 10,
+          title: "Club de puntos",
+          brand: "Lay's",
+          country: "CO",
+          category: "Snacks",
+          mechanic: "Colecciona",
+          prize: "Producto",
+          concept: "Celebridades",
+        },
+      ],
+    },
+    {
+      rank: 3,
+      title: "Reembolso garantizado",
+      brand: "Doritos",
+      promotions: [
+        {
+          id: 11,
+          title: "Compra y recupera",
+          brand: "Doritos",
+          country: "MX",
+          category: "Snacks",
+          mechanic: "Instante",
+          prize: "Efectivo",
+          concept: "Deportes",
+        },
+        {
+          id: 12,
+          title: "Cashback automático",
+          brand: "Doritos",
+          country: "BR",
+          category: "Snacks",
+          mechanic: "Instante",
+          prize: "Efectivo",
+          concept: "UFC",
+        },
+        {
+          id: 13,
+          title: "Devolvemos tu dinero",
+          brand: "Doritos",
+          country: "AR",
+          category: "Snacks",
+          mechanic: "Concurso",
+          prize: "Efectivo",
+          concept: "Deportes",
+        },
+        {
+          id: 14,
+          title: "Reembolso total",
+          brand: "Doritos",
+          country: "CL",
+          category: "Snacks",
+          mechanic: "Instante",
+          prize: "Efectivo",
+          concept: "F1",
+        },
+        {
+          id: 15,
+          title: "Garantía de satisfacción",
+          brand: "Doritos",
+          country: "CO",
+          category: "Snacks",
+          mechanic: "Sorteo",
+          prize: "Efectivo",
+          concept: "NFL",
+        },
+      ],
+    },
+  ],
+  engagement: [
+    {
+      rank: 1,
+      title: "Sigue y gana",
+      brand: "Pepsi",
+      promotions: [
+        {
+          id: 16,
+          title: "Follow para ganar iPhone",
+          brand: "Pepsi",
+          country: "MX",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Producto",
+          concept: "Música",
+        },
+        {
+          id: 17,
+          title: "Síguenos en redes",
+          brand: "Pepsi",
+          country: "BR",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Experiencia",
+          concept: "Celebridades",
+        },
+        {
+          id: 18,
+          title: "Red social activa",
+          brand: "Pepsi",
+          country: "AR",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Producto",
+          concept: "Música",
+        },
+        {
+          id: 19,
+          title: "Comunidad digital",
+          brand: "Pepsi",
+          country: "CL",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Experiencia",
+          concept: "Celebridades",
+        },
+        {
+          id: 20,
+          title: "Seguidores premiados",
+          brand: "Pepsi",
+          country: "CO",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Viaje",
+          concept: "Música",
+        },
+      ],
+    },
+    {
+      rank: 2,
+      title: "Comparte tu historia",
+      brand: "Sprite",
+      promotions: [
+        {
+          id: 21,
+          title: "Tu momento Sprite",
+          brand: "Sprite",
+          country: "MX",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Experiencia",
+          concept: "Deportes",
+        },
+        {
+          id: 22,
+          title: "Historias refrescantes",
+          brand: "Sprite",
+          country: "BR",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Producto",
+          concept: "Música",
+        },
+        {
+          id: 23,
+          title: "Comparte y gana",
+          brand: "Sprite",
+          country: "AR",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Viaje",
+          concept: "Celebridades",
+        },
+        {
+          id: 24,
+          title: "Tu mejor foto",
+          brand: "Sprite",
+          country: "CL",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Experiencia",
+          concept: "Deportes",
+        },
+        {
+          id: 25,
+          title: "Testimonios ganadores",
+          brand: "Sprite",
+          country: "CO",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Producto",
+          concept: "Música",
+        },
+      ],
+    },
+    {
+      rank: 3,
+      title: "Vota y participa",
+      brand: "Fanta",
+      promotions: [
+        {
+          id: 26,
+          title: "Tu sabor favorito",
+          brand: "Fanta",
+          country: "MX",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Producto",
+          concept: "Celebridades",
+        },
+        {
+          id: 27,
+          title: "Elige y gana",
+          brand: "Fanta",
+          country: "BR",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Efectivo",
+          concept: "Música",
+        },
+        {
+          id: 28,
+          title: "Votación popular",
+          brand: "Fanta",
+          country: "AR",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Experiencia",
+          concept: "Deportes",
+        },
+        {
+          id: 29,
+          title: "Tu opinión cuenta",
+          brand: "Fanta",
+          country: "CL",
+          category: "Bebidas",
+          mechanic: "Sorteo",
+          prize: "Producto",
+          concept: "Celebridades",
+        },
+        {
+          id: 30,
+          title: "Democracia del sabor",
+          brand: "Fanta",
+          country: "CO",
+          category: "Bebidas",
+          mechanic: "Concurso",
+          prize: "Viaje",
+          concept: "Música",
+        },
+      ],
+    },
+  ],
+};
