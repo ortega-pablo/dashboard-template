@@ -99,19 +99,19 @@ export function PromoTypeRanking({ promotions }: PromoTypeRankingProps) {
                 <div className="flex items-center gap-2">
                   <Badge
                     variant="outline"
-                    className="border-green-600 text-green-600"
+                    className="border-blue-600 text-blue-600"
                   >
                     VALUE
                   </Badge>
                   <span className="text-sm text-slate-600">{value} promos</span>
                 </div>
-                <span className="text-lg font-bold text-green-600">
+                <span className="text-lg font-bold text-blue-600">
                   {valuePercentage.toFixed(1)}%
                 </span>
               </div>
               <div className="w-full bg-slate-200 rounded-full h-3">
                 <div
-                  className="bg-green-600 h-3 rounded-full transition-all duration-500"
+                  className="bg-blue-600 h-3 rounded-full transition-all duration-500"
                   style={{ width: `${valuePercentage}%` }}
                 />
               </div>
@@ -123,7 +123,7 @@ export function PromoTypeRanking({ promotions }: PromoTypeRankingProps) {
                 <div className="flex items-center gap-2">
                   <Badge
                     variant="outline"
-                    className="border-purple-600 text-purple-600"
+                    className="border-secondary text-secondary"
                   >
                     EQUITY
                   </Badge>
@@ -131,13 +131,13 @@ export function PromoTypeRanking({ promotions }: PromoTypeRankingProps) {
                     {equity} promos
                   </span>
                 </div>
-                <span className="text-lg font-bold text-purple-600">
+                <span className="text-lg font-bold text-secondary">
                   {equityPercentage.toFixed(1)}%
                 </span>
               </div>
               <div className="w-full bg-slate-200 rounded-full h-3">
                 <div
-                  className="bg-purple-600 h-3 rounded-full transition-all duration-500"
+                  className="bg-secondary h-3 rounded-full transition-all duration-500"
                   style={{ width: `${equityPercentage}%` }}
                 />
               </div>
@@ -149,7 +149,7 @@ export function PromoTypeRanking({ promotions }: PromoTypeRankingProps) {
                 <div className="flex items-center gap-2">
                   <Badge
                     variant="outline"
-                    className="border-orange-600 text-orange-600"
+                    className="border-destructive text-destructive"
                   >
                     LICENSE
                   </Badge>
@@ -157,13 +157,13 @@ export function PromoTypeRanking({ promotions }: PromoTypeRankingProps) {
                     {license} promos
                   </span>
                 </div>
-                <span className="text-lg font-bold text-orange-600">
+                <span className="text-lg font-bold text-destructive">
                   {licensePercentage.toFixed(1)}%
                 </span>
               </div>
               <div className="w-full bg-slate-200 rounded-full h-3">
                 <div
-                  className="bg-orange-600 h-3 rounded-full transition-all duration-500"
+                  className="bg-destructive h-3 rounded-full transition-all duration-500"
                   style={{ width: `${licensePercentage}%` }}
                 />
               </div>

@@ -2,110 +2,109 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
+    /* Colores base */
     --background: 0 0% 98%;
-    --foreground: 222 47% 11%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 10%;
 
-    --primary: 221 83% 53%;
+    /* Azul Pepsi principal */
+    --primary: 223 56% 36%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 48 96% 53%;
-    --secondary-foreground: 222 47% 11%;
+    /* Azul claro Pepsi (hover, links, etc) */
+    --secondary: 199 100% 42%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    /* Gris neutro para fondos suaves */
+    --muted: 220 14% 94%;
+    --muted-foreground: 0 0% 35%;
 
-    --accent: 328 86% 70%;
+    /* Rojo Pepsi (acciones, alertas, botones importantes) */
+    --accent: 348 100% 44%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    /* Destructive igualado al rojo Pepsi */
+    --destructive: 348 100% 44%;
+    --destructive-foreground: 348 100% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 221 83% 53%;
+    /* Bordes, inputs y anillos */
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 223 56% 36%;
 
-    --chart-1: 221 83% 53%;
-    --chart-2: 48 96% 53%;
-    --chart-3: 328 86% 70%;
-    --chart-4: 25 95% 53%;
-    --chart-5: 84 81% 44%;
-    --chart-6: 199 89% 48%;
+    /* Paleta para gráficos (solo variaciones del azul y rojo) */
+    --chart-1: 223 56% 36%;
+    --chart-2: 199 100% 42%;
+    --chart-3: 348 100% 44%;
+    --chart-4: 223 30% 50%;
+    --chart-5: 348 70% 60%;
+    --chart-6: 223 80% 25%;
 
+    /* Esquinas y sidebar */
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
+    --sidebar-foreground: 0 0% 15%;
+    --sidebar-primary: 223 56% 36%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 223 10% 94%;
+    --sidebar-accent-foreground: 0 0% 10%;
     --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 223 56% 36%;
   }
 
+  /* Modo oscuro Pepsi: dominante azul profundo con rojo como acento */
   .dark {
-    --background: 222 47% 11%;
+    --background: 223 56% 10%;
     --foreground: 0 0% 98%;
 
-    --card: 222 39% 15%;
+    --card: 223 56% 14%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 222 39% 15%;
+    --popover: 223 56% 14%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 221 83% 53%;
+    --primary: 223 56% 36%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 48 96% 53%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 199 100% 42%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 223 25% 20%;
+    --muted-foreground: 223 10% 75%;
 
-    --accent: 328 86% 70%;
+    --accent: 348 100% 44%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 63% 31%;
+    --destructive: 348 80% 30%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 221 83% 53%;
+    --border: 223 25% 20%;
+    --input: 223 25% 20%;
+    --ring: 223 56% 36%;
 
-    --chart-1: 221 83% 53%;
-    --chart-2: 48 96% 53%;
-    --chart-3: 328 86% 70%;
-    --chart-4: 25 95% 53%;
-    --chart-5: 84 81% 44%;
-    --chart-6: 199 89% 48%;
-    
-    --sidebar-background: 240 6% 10%;
-    --sidebar-foreground: 240 5% 96%;
-    --sidebar-primary: 221 83% 53%;
+    --chart-1: 223 56% 36%;
+    --chart-2: 199 100% 42%;
+    --chart-3: 348 100% 44%;
+    --chart-4: 223 30% 50%;
+    --chart-5: 348 70% 60%;
+    --chart-6: 223 80% 25%;
+
+    --sidebar-background: 223 56% 10%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 223 56% 36%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4% 16%;
-    --sidebar-accent-foreground: 240 5% 96%;
-    --sidebar-border: 240 4% 16%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-accent: 223 30% 20%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 223 30% 20%;
+    --sidebar-ring: 223 56% 36%;
   }
 }
 

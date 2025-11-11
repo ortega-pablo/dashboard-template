@@ -72,7 +72,7 @@ export function MechanicsAndPrizes({ promotions }: MechanicsAndPrizesProps) {
                           {shortenText(mecanica)}
                         </p>
                         <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className="text-xs/">
                             {count}
                           </Badge>
                           <span className="text-sm font-semibold text-blue-600">
@@ -97,7 +97,7 @@ export function MechanicsAndPrizes({ promotions }: MechanicsAndPrizesProps) {
         {/* Top Premios */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-2 h-8 bg-purple-600 rounded"></div>
+            <div className="w-2 h-8 bg-destructive rounded"></div>
             <h3 className="text-lg font-semibold text-slate-700">
               Top 5 Premios
             </h3>
@@ -109,15 +109,15 @@ export function MechanicsAndPrizes({ promotions }: MechanicsAndPrizesProps) {
               return (
                 <div key={premio} className="group">
                   <div className="flex items-start gap-3 mb-2">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                      <span className="text-sm font-bold text-purple-600">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-destructive-foreground flex items-center justify-center">
+                      <span className="text-sm font-bold text-destructive">
                         {index + 1}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <p
-                          className="text-sm font-medium text-slate-700 group-hover:text-purple-600 transition-colors"
+                          className="text-sm font-medium text-slate-700 group-hover:text-destructive transition-colors"
                           title={premio}
                         >
                           {shortenText(premio)}
@@ -126,14 +126,14 @@ export function MechanicsAndPrizes({ promotions }: MechanicsAndPrizesProps) {
                           <Badge variant="secondary" className="text-xs">
                             {count}
                           </Badge>
-                          <span className="text-sm font-semibold text-purple-600">
+                          <span className="text-sm font-semibold text-destructive">
                             {percentage.toFixed(0)}%
                           </span>
                         </div>
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-2">
                         <div
-                          className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                          className="bg-destructive h-2 rounded-full transition-all duration-500"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
@@ -155,8 +155,8 @@ export function MechanicsAndPrizes({ promotions }: MechanicsAndPrizesProps) {
             </div>
             <div className="text-xs text-slate-600">Mecánicas únicas</div>
           </div>
-          <div className="text-center p-3 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">
+          <div className="text-center p-3 bg-destructive-foreground rounded-lg">
+            <div className="text-2xl font-bold text-destructive">
               {Object.keys(prizesCounts).length}
             </div>
             <div className="text-xs text-slate-600">Premios únicos</div>

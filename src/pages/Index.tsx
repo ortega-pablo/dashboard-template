@@ -342,7 +342,7 @@ export default function Index() {
             </Card>
 
             {/* Tabla de promociones */}
-            {/* <PromotionsTable promotions={filteredPromotions} /> */}
+            <PromotionsTable promotions={filteredPromotions} />
 
             {/* Botón de descarga */}
             <div className="flex justify-center">
@@ -439,7 +439,7 @@ export default function Index() {
                   </div>
                 </Card>
 
-                {/* <PromotionsTable promotions={filteredPromotions} /> */}
+                <PromotionsTable promotions={filteredPromotions} />
                 
                 <div className="flex justify-center">
                   <Button onClick={downloadCSV} size="lg" className="gap-2">
@@ -554,7 +554,7 @@ export default function Index() {
                   </div>
                 </Card>
 
-                {/* <PromotionsTable promotions={filteredPromotions} /> */}
+                <PromotionsTable promotions={filteredPromotions} />
 
                 <div className="flex justify-center">
                   <Button onClick={downloadCSV} size="lg" className="gap-2">
