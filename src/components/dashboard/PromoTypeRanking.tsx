@@ -1,146 +1,186 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useState } from "react";
-import {
-  mockPromotionsData,
-  type PromoTypeRanking as PromoTypeRankingData,
-} from "@/data/promotions-mock-data";
+import { Promotion } from "@/data/promotions-mock-data";
 
-export const PromoTypeRanking = () => {
-  const [promoType, setPromoType] = useState<"transaccional" | "engagement">(
-    "transaccional"
-  );
-  const [selectedRanking, setSelectedRanking] =
-    useState<PromoTypeRankingData | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+interface PromoTypeRankingProps {
+  promotions: Promotion[];
+}
 
-  const currentPromos = mockPromotionsData[promoType];
+export function PromoTypeRanking({ promotions }: PromoTypeRankingProps) {
+  // Calcular estadísticas de tipos de promo
+  const transaccional = promotions.filter(
+    (p) => p.tipoPromo === "TRANSACCIONAL"
+  ).length;
+  const engagement = promotions.filter(
+    (p) => p.tipoPromo === "ENGAGEMENT"
+  ).length;
+  const total = promotions.length;
 
-  const handleRankingClick = (ranking: PromoTypeRankingData) => {
-    setSelectedRanking(ranking);
-    setIsDialogOpen(true);
-  };
+  const transaccionalPercentage = total > 0 ? (transaccional / total) * 100 : 0;
+  const engagementPercentage = total > 0 ? (engagement / total) * 100 : 0;
+
+  // Calcular estadísticas de clasificación
+  const value = promotions.filter((p) => p.clasificacion === "VALUE").length;
+  const equity = promotions.filter((p) => p.clasificacion === "EQUITY").length;
+  const license = promotions.filter(
+    (p) => p.clasificacion === "LICENSE"
+  ).length;
+
+  const valuePercentage = total > 0 ? (value / total) * 100 : 0;
+  const equityPercentage = total > 0 ? (equity / total) * 100 : 0;
+  const licensePercentage = total > 0 ? (license / total) * 100 : 0;
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Tipo de Promo</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Select
-            value={promoType}
-            onValueChange={(value) =>
-              setPromoType(value as "transaccional" | "engagement")
-            }
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="transaccional">Transaccional</SelectItem>
-              <SelectItem value="engagement">Engagement</SelectItem>
-            </SelectContent>
-          </Select>
+    <Card className="p-6">
+      <h2 className="text-2xl font-bold mb-6">Ranking de Tipos de Promoción</h2>
 
-          <div className="space-y-2">
-            {currentPromos.map((promo) => (
-              <div
-                key={promo.rank}
-                onClick={() => handleRankingClick(promo)}
-                className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
-              >
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
-                  {promo.rank}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Tipo de Promo */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-slate-700">
+            Por Tipo de Promo
+          </h3>
+          <div className="space-y-4">
+            {/* TRANSACCIONAL */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="default" className="bg-blue-600">
+                    TRANSACCIONAL
+                  </Badge>
+                  <span className="text-sm text-slate-600">
+                    {transaccional} promos
+                  </span>
                 </div>
-                <div className="flex-1">
-                  <div className="font-medium">{promo.title}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {promo.brand}
-                  </div>
-                </div>
-                <Badge
-                  variant={
-                    promoType === "transaccional" ? "default" : "secondary"
-                  }
-                >
-                  {promoType}
-                </Badge>
+                <span className="text-lg font-bold text-blue-600">
+                  {transaccionalPercentage.toFixed(1)}%
+                </span>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl">
-              {selectedRanking?.title} - {selectedRanking?.brand}
-            </DialogTitle>
-          </DialogHeader>
-
-          {selectedRanking && (
-            <div className="mt-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Título</TableHead>
-                    <TableHead>País</TableHead>
-                    <TableHead>Categoría</TableHead>
-                    <TableHead>Mecánica</TableHead>
-                    <TableHead>Premio</TableHead>
-                    <TableHead>Concepto</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {selectedRanking.promotions.map((promotion) => (
-                    <TableRow key={promotion.id}>
-                      <TableCell className="font-medium">
-                        {promotion.title}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{promotion.country}</Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {promotion.category}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{promotion.mechanic}</Badge>
-                      </TableCell>
-                      <TableCell>{promotion.prize}</TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {promotion.concept}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <div className="w-full bg-slate-200 rounded-full h-3">
+                <div
+                  className="bg-blue-600 h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${transaccionalPercentage}%` }}
+                />
+              </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
+
+            {/* ENGAGEMENT */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">ENGAGEMENT</Badge>
+                  <span className="text-sm text-slate-600">
+                    {engagement} promos
+                  </span>
+                </div>
+                <span className="text-lg font-bold text-slate-600">
+                  {engagementPercentage.toFixed(1)}%
+                </span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-3">
+                <div
+                  className="bg-slate-600 h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${engagementPercentage}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Clasificación */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-slate-700">
+            Por Clasificación
+          </h3>
+          <div className="space-y-4">
+            {/* VALUE */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className="border-green-600 text-green-600"
+                  >
+                    VALUE
+                  </Badge>
+                  <span className="text-sm text-slate-600">{value} promos</span>
+                </div>
+                <span className="text-lg font-bold text-green-600">
+                  {valuePercentage.toFixed(1)}%
+                </span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-3">
+                <div
+                  className="bg-green-600 h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${valuePercentage}%` }}
+                />
+              </div>
+            </div>
+
+            {/* EQUITY */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className="border-purple-600 text-purple-600"
+                  >
+                    EQUITY
+                  </Badge>
+                  <span className="text-sm text-slate-600">
+                    {equity} promos
+                  </span>
+                </div>
+                <span className="text-lg font-bold text-purple-600">
+                  {equityPercentage.toFixed(1)}%
+                </span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-3">
+                <div
+                  className="bg-purple-600 h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${equityPercentage}%` }}
+                />
+              </div>
+            </div>
+
+            {/* LICENSE */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className="border-orange-600 text-orange-600"
+                  >
+                    LICENSE
+                  </Badge>
+                  <span className="text-sm text-slate-600">
+                    {license} promos
+                  </span>
+                </div>
+                <span className="text-lg font-bold text-orange-600">
+                  {licensePercentage.toFixed(1)}%
+                </span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-3">
+                <div
+                  className="bg-orange-600 h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${licensePercentage}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Resumen Total */}
+      <div className="mt-6 pt-6 border-t border-slate-200">
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-semibold text-slate-700">
+            Total de Promociones
+          </span>
+          <span className="text-3xl font-bold text-blue-600">{total}</span>
+        </div>
+      </div>
+    </Card>
   );
-};
+}

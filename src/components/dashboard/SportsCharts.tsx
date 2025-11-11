@@ -1,41 +1,33 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card } from '@/components/ui/card';
 
 interface Sport {
-  name: string;
-  percentage: number;
-  color: string;
+  id: string;
+  nombre: string;
+  icon: string;
+  count: number;
 }
 
-const sports: Sport[] = [
-  { name: "Fútbol", percentage: 45, color: "bg-chart-1" },
-  { name: "UFC/Deportes de combate", percentage: 22, color: "bg-chart-3" },
-  { name: "Otros", percentage: 33, color: "bg-chart-5" },
-];
+interface SportsChartsProps {
+  sports: Sport[];
+}
 
-export const SportsChart = () => {
+export function SportsCharts({ sports }: SportsChartsProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Promos Deporte</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <Card className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Promociones por Deporte</h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {sports.map((sport) => (
-          <div key={sport.name} className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">{sport.name}</span>
-              <span className="text-muted-foreground">{sport.percentage}%</span>
-            </div>
-            <div className="relative">
-              <Progress value={sport.percentage} className="h-2" />
-              <div 
-                className={`absolute top-0 left-0 h-2 rounded-full ${sport.color}`}
-                style={{ width: `${sport.percentage}%` }}
-              />
-            </div>
+          <div
+            key={sport.id}
+            className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg hover:shadow-lg transition-shadow"
+          >
+            <div className="text-5xl mb-3">{sport.icon}</div>
+            <div className="font-semibold text-lg text-center mb-1">{sport.nombre}</div>
+            <div className="text-3xl font-bold text-blue-600">{sport.count}</div>
+            <div className="text-sm text-slate-600">promociones</div>
           </div>
         ))}
-      </CardContent>
+      </div>
     </Card>
   );
-};
+}

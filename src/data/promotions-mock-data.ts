@@ -1,376 +1,314 @@
-// Mock data structure for promotions dashboard
-// This will be used to populate all dashboard elements as if it were an API response
+// Mock data actualizado basado en la estructura del Excel
 
 export interface Promotion {
-  id: number;
-  title: string;
-  brand: string;
-  country: string;
-  category: string;
-  mechanic: string;
-  prize: string;
-  concept: string;
-  license?: string;
+  id: string;
+  pais: "BRASIL" | "CHILE" | "GUATEMALA" | "MEXICO" | "COLOMBIA";
+  tipoPromo: "TRANSACCIONAL" | "ENGAGEMENT";
+  clasificacion: "VALUE" | "EQUITY" | "LICENSE";
+  mecanica: string;
+  premio: string;
+  marca: string;
+  categoria: string;
+  temporalidad: string;
+  concepto: "CELEBRITIES" | "DEPORTES" | string;
+  f1: boolean;
+  mundial: boolean;
+  nfl: boolean;
+  uefaChampionsLeague: boolean;
+  promoExito: boolean;
+  relacionPepsico: "PEPSICO" | "COMPETENCIA DIRECTA" | "COMPETENCIA OTROS";
+  descripcion?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
+  celebrity?: string;
 }
 
-export interface PromoTypeRanking {
-  rank: number;
-  title: string;
-  brand: string;
-  promotions: Promotion[];
+const mecanicas = [
+  "Descuentos (EJ: 2X1, por cantidad, por forma de pago)",
+  "Canje inmediato por un premio (ej.: compras y obtienes un producto de regalo por rascadita u otro modo)",
+  "Promociones de devolución de dinero (cash back)",
+  "Descuentos por volumen de compra (compra más, ahorra más)",
+  "Sorteos (Ej: en páginas web, en aplicaciones, en tiendas, completando cupones)",
+  "Canje de un premio por acumulación de (ej.: tapas, empaques, tiras)",
+  "Colección de productos (Ej: tazos, figuras/ productos con diferentes diseños o variedades, etc)",
+  "Registro de códigos, tickets, comprobantes de compra",
+  "Desafíos o juegos online para obtener descuentos/premios (Ej: retos, dinámicas en redes sociales, etc)",
+  "Programas de fidelización (acumulación de puntos, descuentos exclusivos, etc.)",
+];
+
+const premios = [
+  "Viajes",
+  "Dinero en efectivo",
+  "Bonos/ tarjeta de regalo para comprar en determinado lugar (Ej. supermercados, tiendas de indumentaria, etc.)",
+  "Electrónicos (Pantallas/Bocinas/Equipos de Sonido/Celulares)",
+  "Descuentos en productos (Ej.: % de descuento, 2x1, etc.)",
+  "Descuentos en apps de delivery/entregas a domicilio tipo Rappi",
+  "Descuentos en apps de transporte tipo Uber",
+  "Entradas a conciertos / eventos deportivos",
+  "Autos/ motos",
+  "Estadías en lugares turísticos",
+];
+
+const categorias = [
+  "Bebidas gaseosas, sodas",
+  "Bebidas alcohólicas/con alcohol (no incluye cerveza)",
+  "Cervezas",
+  "Jugos listos para tomar",
+  "Productos de almacén/tienda (tipo spaguetti, arroz, etc)",
+  "Snacks salados/ botanas/ paquetes/ pasabocas",
+  "Galletas dulces/ Galletas saladas",
+  "Snacks dulces/ Confitería / Dulces/ Golosinas",
+  "Cadenas de supermercados",
+  "Bancos/ entidades financieras",
+  "Tecnología (ej: móviles/celulares, electrodomésticos)",
+  "Ropa y accesorios",
+  "Productos de limpieza",
+  "Empresas de turismo",
+  "Industria automotriz",
+  "Productos de perfumería",
+];
+
+const marcasPepsico = [
+  "Pepsi",
+  "7UP",
+  "Gatorade",
+  "Lay's",
+  "Doritos",
+  "Cheetos",
+  "Ruffles",
+  "Quaker",
+  "Tropicana",
+  "Sabritas",
+];
+
+const marcasCompetenciaDirecta = [
+  "Coca-Cola",
+  "Sprite",
+  "Fanta",
+  "Red Bull",
+  "Monster",
+  "Powerade",
+];
+
+const marcasCompetenciaOtros = [
+  "Corona",
+  "Heineken",
+  "Modelo",
+  "Tecate",
+  "Budweiser",
+  "Stella Artois",
+  "Brahma",
+  "Pilsen",
+  "Cristal",
+];
+
+const celebrities = [
+  "Lionel Messi",
+  "Cristiano Ronaldo",
+  "Neymar Jr",
+  "Bad Bunny",
+  "Shakira",
+  "J Balvin",
+  "Karol G",
+  "Paulo Dybala",
+  "Lele Pons",
+  "Maluma",
+];
+
+function getRandomItem<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
 }
 
-export interface PromoTypeData {
-  transaccional: PromoTypeRanking[];
-  engagement: PromoTypeRanking[];
+function generatePromotion(index: number): Promotion {
+  const pais = getRandomItem([
+    "BRASIL",
+    "CHILE",
+    "GUATEMALA",
+    "MEXICO",
+    "COLOMBIA",
+  ] as const);
+  const relacionPepsico = getRandomItem([
+    "PEPSICO",
+    "COMPETENCIA DIRECTA",
+    "COMPETENCIA OTROS",
+  ] as const);
+
+  let marca: string;
+  if (relacionPepsico === "PEPSICO") {
+    marca = getRandomItem(marcasPepsico);
+  } else if (relacionPepsico === "COMPETENCIA DIRECTA") {
+    marca = getRandomItem(marcasCompetenciaDirecta);
+  } else {
+    marca = getRandomItem(marcasCompetenciaOtros);
+  }
+
+  const tipoPromo = getRandomItem(["TRANSACCIONAL", "ENGAGEMENT"] as const);
+  const clasificacion = getRandomItem(["VALUE", "EQUITY", "LICENSE"] as const);
+  const concepto = Math.random() > 0.5 ? "CELEBRITIES" : "DEPORTES";
+
+  const usaF1 = Math.random() > 0.85;
+  const usaMundial = Math.random() > 0.8;
+  const usaNFL = Math.random() > 0.85;
+  const usaUEFA = Math.random() > 0.82;
+
+  return {
+    id: `promo-${index}`,
+    pais,
+    tipoPromo,
+    clasificacion,
+    mecanica: getRandomItem(mecanicas),
+    premio: getRandomItem(premios),
+    marca,
+    categoria: getRandomItem(categorias),
+    temporalidad: `Q${Math.ceil(Math.random() * 4)} 2024`,
+    concepto,
+    f1: usaF1,
+    mundial: usaMundial,
+    nfl: usaNFL,
+    uefaChampionsLeague: usaUEFA,
+    promoExito: Math.random() > 0.6,
+    relacionPepsico,
+    descripcion: `Promoción ${tipoPromo.toLowerCase()} de ${marca} en ${pais}`,
+    fechaInicio: `2024-${String(Math.ceil(Math.random() * 12)).padStart(
+      2,
+      "0"
+    )}-01`,
+    fechaFin: `2024-${String(Math.ceil(Math.random() * 12)).padStart(
+      2,
+      "0"
+    )}-28`,
+    celebrity:
+      concepto === "CELEBRITIES" ? getRandomItem(celebrities) : undefined,
+  };
 }
 
-// Mock promotions data
-export const mockPromotionsData: PromoTypeData = {
-  transaccional: [
-    {
-      rank: 1,
-      title: "Compra y gana viaje",
-      brand: "Coca-Cola",
-      promotions: [
-        {
-          id: 1,
-          title: "Gana un viaje a París",
-          brand: "Coca-Cola",
-          country: "MX",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Viaje",
-          concept: "Deportes",
-        },
-        {
-          id: 2,
-          title: "Viaje al Mundial FIFA",
-          brand: "Coca-Cola",
-          country: "BR",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Viaje",
-          concept: "Deportes",
-        },
-        {
-          id: 3,
-          title: "Vacaciones en Dubai",
-          brand: "Coca-Cola",
-          country: "AR",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Viaje",
-          concept: "Celebridades",
-        },
-        {
-          id: 4,
-          title: "Tour por Europa",
-          brand: "Coca-Cola",
-          country: "CL",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Viaje",
-          concept: "Música",
-        },
-        {
-          id: 5,
-          title: "Aventura en Tokio",
-          brand: "Coca-Cola",
-          country: "CO",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Viaje",
-          concept: "Deportes",
-        },
-      ],
-    },
-    {
-      rank: 2,
-      title: "Acumula puntos",
-      brand: "Lay's",
-      promotions: [
-        {
-          id: 6,
-          title: "Colecciona y gana",
-          brand: "Lay's",
-          country: "MX",
-          category: "Snacks",
-          mechanic: "Colecciona",
-          prize: "Producto",
-          concept: "Deportes",
-        },
-        {
-          id: 7,
-          title: "Puntos por compra",
-          brand: "Lay's",
-          country: "BR",
-          category: "Snacks",
-          mechanic: "Instante",
-          prize: "Efectivo",
-          concept: "Celebridades",
-        },
-        {
-          id: 8,
-          title: "Acumula y canjea",
-          brand: "Lay's",
-          country: "AR",
-          category: "Snacks",
-          mechanic: "Colecciona",
-          prize: "Producto",
-          concept: "Música",
-        },
-        {
-          id: 9,
-          title: "Premia tu lealtad",
-          brand: "Lay's",
-          country: "CL",
-          category: "Snacks",
-          mechanic: "Instante",
-          prize: "Experiencia",
-          concept: "Deportes",
-        },
-        {
-          id: 10,
-          title: "Club de puntos",
-          brand: "Lay's",
-          country: "CO",
-          category: "Snacks",
-          mechanic: "Colecciona",
-          prize: "Producto",
-          concept: "Celebridades",
-        },
-      ],
-    },
-    {
-      rank: 3,
-      title: "Reembolso garantizado",
-      brand: "Doritos",
-      promotions: [
-        {
-          id: 11,
-          title: "Compra y recupera",
-          brand: "Doritos",
-          country: "MX",
-          category: "Snacks",
-          mechanic: "Instante",
-          prize: "Efectivo",
-          concept: "Deportes",
-        },
-        {
-          id: 12,
-          title: "Cashback automático",
-          brand: "Doritos",
-          country: "BR",
-          category: "Snacks",
-          mechanic: "Instante",
-          prize: "Efectivo",
-          concept: "UFC",
-        },
-        {
-          id: 13,
-          title: "Devolvemos tu dinero",
-          brand: "Doritos",
-          country: "AR",
-          category: "Snacks",
-          mechanic: "Concurso",
-          prize: "Efectivo",
-          concept: "Deportes",
-        },
-        {
-          id: 14,
-          title: "Reembolso total",
-          brand: "Doritos",
-          country: "CL",
-          category: "Snacks",
-          mechanic: "Instante",
-          prize: "Efectivo",
-          concept: "F1",
-        },
-        {
-          id: 15,
-          title: "Garantía de satisfacción",
-          brand: "Doritos",
-          country: "CO",
-          category: "Snacks",
-          mechanic: "Sorteo",
-          prize: "Efectivo",
-          concept: "NFL",
-        },
-      ],
-    },
+// Generar 150 promociones
+export const mockPromotions: Promotion[] = Array.from({ length: 150 }, (_, i) =>
+  generatePromotion(i + 1)
+);
+
+// Estadísticas por país
+export const countryStats = {
+  BRASIL: mockPromotions.filter((p) => p.pais === "BRASIL").length,
+  CHILE: mockPromotions.filter((p) => p.pais === "CHILE").length,
+  GUATEMALA: mockPromotions.filter((p) => p.pais === "GUATEMALA").length,
+  MEXICO: mockPromotions.filter((p) => p.pais === "MEXICO").length,
+  COLOMBIA: mockPromotions.filter((p) => p.pais === "COLOMBIA").length,
+};
+
+// Categorías de México para filtrado
+export const mexicoCategorias = [
+  "Bebidas gaseosas, sodas",
+  "Snacks salados/ botanas/ paquetes/ pasabocas",
+  "Snacks dulces/ Confitería / Dulces/ Golosinas",
+  "Jugos listos para tomar",
+  "Productos de almacén/tienda (tipo spaguetti, arroz, etc)",
+  "Cadenas de supermercados",
+  "Tecnología (ej: móviles/celulares, electrodomésticos)",
+  "Bancos/ entidades financieras",
+  "Ropa y accesorios",
+  "Cervezas",
+  "Bebidas alcohólicas/con alcohol (no incluye cerveza)",
+];
+
+// Subcategorías de ejemplo
+export const mexicoSubcategorias: Record<string, string[]> = {
+  "Bebidas gaseosas, sodas": [
+    "Colas",
+    "Gaseosas saborizadas",
+    "Aguas saborizadas",
   ],
-  engagement: [
-    {
-      rank: 1,
-      title: "Sigue y gana",
-      brand: "Pepsi",
-      promotions: [
-        {
-          id: 16,
-          title: "Follow para ganar iPhone",
-          brand: "Pepsi",
-          country: "MX",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Producto",
-          concept: "Música",
-        },
-        {
-          id: 17,
-          title: "Síguenos en redes",
-          brand: "Pepsi",
-          country: "BR",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Experiencia",
-          concept: "Celebridades",
-        },
-        {
-          id: 18,
-          title: "Red social activa",
-          brand: "Pepsi",
-          country: "AR",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Producto",
-          concept: "Música",
-        },
-        {
-          id: 19,
-          title: "Comunidad digital",
-          brand: "Pepsi",
-          country: "CL",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Experiencia",
-          concept: "Celebridades",
-        },
-        {
-          id: 20,
-          title: "Seguidores premiados",
-          brand: "Pepsi",
-          country: "CO",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Viaje",
-          concept: "Música",
-        },
-      ],
-    },
-    {
-      rank: 2,
-      title: "Comparte tu historia",
-      brand: "Sprite",
-      promotions: [
-        {
-          id: 21,
-          title: "Tu momento Sprite",
-          brand: "Sprite",
-          country: "MX",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Experiencia",
-          concept: "Deportes",
-        },
-        {
-          id: 22,
-          title: "Historias refrescantes",
-          brand: "Sprite",
-          country: "BR",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Producto",
-          concept: "Música",
-        },
-        {
-          id: 23,
-          title: "Comparte y gana",
-          brand: "Sprite",
-          country: "AR",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Viaje",
-          concept: "Celebridades",
-        },
-        {
-          id: 24,
-          title: "Tu mejor foto",
-          brand: "Sprite",
-          country: "CL",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Experiencia",
-          concept: "Deportes",
-        },
-        {
-          id: 25,
-          title: "Testimonios ganadores",
-          brand: "Sprite",
-          country: "CO",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Producto",
-          concept: "Música",
-        },
-      ],
-    },
-    {
-      rank: 3,
-      title: "Vota y participa",
-      brand: "Fanta",
-      promotions: [
-        {
-          id: 26,
-          title: "Tu sabor favorito",
-          brand: "Fanta",
-          country: "MX",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Producto",
-          concept: "Celebridades",
-        },
-        {
-          id: 27,
-          title: "Elige y gana",
-          brand: "Fanta",
-          country: "BR",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Efectivo",
-          concept: "Música",
-        },
-        {
-          id: 28,
-          title: "Votación popular",
-          brand: "Fanta",
-          country: "AR",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Experiencia",
-          concept: "Deportes",
-        },
-        {
-          id: 29,
-          title: "Tu opinión cuenta",
-          brand: "Fanta",
-          country: "CL",
-          category: "Bebidas",
-          mechanic: "Sorteo",
-          prize: "Producto",
-          concept: "Celebridades",
-        },
-        {
-          id: 30,
-          title: "Democracia del sabor",
-          brand: "Fanta",
-          country: "CO",
-          category: "Bebidas",
-          mechanic: "Concurso",
-          prize: "Viaje",
-          concept: "Música",
-        },
-      ],
-    },
+  "Snacks salados/ botanas/ paquetes/ pasabocas": [
+    "Papas fritas",
+    "Botanas de maíz",
+    "Cacahuates",
+    "Palomitas",
+  ],
+  "Snacks dulces/ Confitería / Dulces/ Golosinas": [
+    "Chocolates",
+    "Caramelos",
+    "Chicles",
+    "Gomitas",
+  ],
+  "Jugos listos para tomar": [
+    "Jugos naturales",
+    "Néctares",
+    "Bebidas de frutas",
+  ],
+  "Productos de almacén/tienda (tipo spaguetti, arroz, etc)": [
+    "Pastas",
+    "Arroz",
+    "Granos",
+    "Cereales",
+  ],
+  "Cadenas de supermercados": [
+    "Hipermercados",
+    "Supermercados",
+    "Tiendas de conveniencia",
+  ],
+  "Tecnología (ej: móviles/celulares, electrodomésticos)": [
+    "Smartphones",
+    "Televisores",
+    "Audio",
+    "Computadoras",
+  ],
+  "Bancos/ entidades financieras": [
+    "Bancos comerciales",
+    "Fintech",
+    "Tarjetas de crédito",
+  ],
+  "Ropa y accesorios": [
+    "Ropa deportiva",
+    "Ropa casual",
+    "Calzado",
+    "Accesorios",
+  ],
+  Cervezas: ["Cervezas claras", "Cervezas oscuras", "Cervezas artesanales"],
+  "Bebidas alcohólicas/con alcohol (no incluye cerveza)": [
+    "Vinos",
+    "Licores",
+    "Bebidas preparadas",
   ],
 };
+
+// Deportes
+export const deportes = [
+  { id: "f1", nombre: "F1", icon: "🏎️" },
+  { id: "mundial", nombre: "Mundial", icon: "⚽" },
+  { id: "nfl", nombre: "NFL", icon: "🏈" },
+  { id: "uefa", nombre: "UEFA Champions League", icon: "🏆" },
+];
+
+// Inspiración (sin Coca-Cola)
+export const inspiracionBrands = [
+  {
+    nombre: "Pepsi",
+    descripcion: "Campañas globales con celebridades y deportes",
+    imageUrl: "/placeholder-pepsi.jpg",
+    relacionPepsico: "PEPSICO",
+  },
+  {
+    nombre: "Gatorade",
+    descripcion: "Patrocinios deportivos y programas de fidelización",
+    imageUrl: "/placeholder-gatorade.jpg",
+    relacionPepsico: "PEPSICO",
+  },
+  {
+    nombre: "Doritos",
+    descripcion: "Activaciones digitales y experiencias interactivas",
+    imageUrl: "/placeholder-doritos.jpg",
+    relacionPepsico: "PEPSICO",
+  },
+  {
+    nombre: "Red Bull",
+    descripcion: "Marketing de eventos extremos y contenido",
+    imageUrl: "/placeholder-redbull.jpg",
+    relacionPepsico: "COMPETENCIA DIRECTA",
+  },
+  {
+    nombre: "Heineken",
+    descripción: "Patrocinios de UEFA y experiencias premium",
+    imageUrl: "/placeholder-heineken.jpg",
+    relacionPepsico: "COMPETENCIA OTROS",
+  },
+];

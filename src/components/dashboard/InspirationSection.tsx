@@ -1,107 +1,56 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { useState, useMemo } from "react";
-import { mockPromotionsData, Promotion } from "@/data/promotions-mock-data";
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
-interface InspirationPromo {
-  id: number;
-  title: string;
-  brand: string;
-  category: string;
-  concept: string;
+interface Brand {
+  nombre: string;
+  descripcion: string;
+  imageUrl: string;
+  relacionPepsico: string;
 }
 
-// Generamos una lista de inspiración a partir del mock existente.
-// No modificamos el mock original — solo lo usamos para construir una vista reducida.
-const buildInspirationPromos = (): InspirationPromo[] => {
-  // Extraer todas las promociones de las secciones transaccional y engagement
-  const allPromotions: Promotion[] = [];
+interface InspirationSectionProps {
+  brands: Brand[];
+}
 
-  mockPromotionsData.transaccional.forEach((group) => {
-    allPromotions.push(...group.promotions);
-  });
-  mockPromotionsData.engagement.forEach((group) => {
-    allPromotions.push(...group.promotions);
-  });
-
-  // Deduplicar por id y mapear a la forma que usa el componente.
-  const seen = new Set<number>();
-  const mapped: InspirationPromo[] = [];
-
-  for (const p of allPromotions) {
-    if (seen.has(p.id)) continue;
-    seen.add(p.id);
-    mapped.push({
-      id: p.id,
-      title: p.title,
-      brand: p.brand,
-      category: p.category,
-      concept: p.concept,
-    });
-    // Limitar la lista a un número razonable para la sección de inspiración
-    if (mapped.length >= 6) break;
-  }
-
-  // Si por alguna razón no hay promos, incluir un fallback mínimo (no tocar el mock)
-  if (mapped.length === 0) {
-    return [
-      { id: 9999, title: "Promo de ejemplo", brand: "Marca", category: "Categoría", concept: "General" },
-    ];
-  }
-
-  return mapped;
-};
-
-export const InspirationSection = () => {
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
-  const inspirationPromos = useMemo(() => buildInspirationPromos(), []);
-
-  const filteredPromos = useMemo(() => {
-    if (selectedFilter === "all") return inspirationPromos;
-    return inspirationPromos.filter((promo) => {
-      // Normalizar acentos y comparar en minúsculas usando el rango de marcas combinantes Unicode
-      const normalized = promo.concept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      // Si algo falla, también comprobamos sin normalizar
-      const normSafe = promo.concept.toLowerCase().replace(/[\u0300-\u036f]/g, "");
-      return normalized === selectedFilter || normSafe === selectedFilter;
-    });
-  }, [inspirationPromos, selectedFilter]);
-
+export function InspirationSection({ brands }: InspirationSectionProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Promos de Inspiración</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-          <SelectTrigger>
-            <SelectValue placeholder="Filtrar por concepto" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas</SelectItem>
-            <SelectItem value="deportes">Deportes</SelectItem>
-            <SelectItem value="musica">Música</SelectItem>
-            <SelectItem value="celebridades">Celebridades</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <div className="space-y-4">
-          {filteredPromos.map((promo) => (
-            <div
-              key={promo.id}
-              className="p-4 rounded-lg border bg-gradient-to-r from-primary/5 to-accent/5 hover:from-primary/10 hover:to-accent/10 transition-all"
-            >
-              <h3 className="font-semibold text-lg mb-2">{promo.title}</h3>
-              <div className="flex gap-2 flex-wrap">
-                <Badge variant="outline">{promo.brand}</Badge>
-                <Badge variant="secondary">{promo.category}</Badge>
-                <Badge className="bg-chart-3">{promo.concept}</Badge>
+    <Card className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Promociones Inspiración</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {brands.map((brand) => (
+          <div
+            key={brand.nombre}
+            className="group relative overflow-hidden rounded-lg border border-slate-200 hover:border-blue-400 transition-all duration-300 hover:shadow-lg"
+          >
+            <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+              <div className="text-6xl font-bold text-slate-300">
+                {brand.nombre[0]}
               </div>
             </div>
-          ))}
-        </div>
-      </CardContent>
+            <div className="p-4">
+              <h3 className="font-bold text-lg mb-1">{brand.nombre}</h3>
+              <Badge 
+                variant={
+                  brand.relacionPepsico === 'PEPSICO' 
+                    ? 'default' 
+                    : brand.relacionPepsico === 'COMPETENCIA DIRECTA'
+                    ? 'destructive'
+                    : 'secondary'
+                }
+                className="mb-2"
+              >
+                {brand.relacionPepsico}
+              </Badge>
+              <p className="text-sm text-slate-600 line-clamp-2">
+                {brand.descripcion}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <p className="text-white text-sm">{brand.descripcion}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </Card>
   );
-};
+}

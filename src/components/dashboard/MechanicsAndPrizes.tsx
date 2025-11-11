@@ -1,559 +1,180 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useState, useMemo } from "react";
-import {
-  mockPromotionsData,
-  type Promotion,
-} from "@/data/promotions-mock-data";
+import { Promotion } from "@/data/promotions-mock-data";
 
-interface MechanicRanking {
-  rank: number;
-  title: string;
-  brand: string;
-  count: number;
+interface MechanicsAndPrizesProps {
   promotions: Promotion[];
 }
 
-interface PrizeRanking {
-  rank: number;
-  name: string;
-  count: number;
-  promotions: Promotion[];
-}
+export function MechanicsAndPrizes({ promotions }: MechanicsAndPrizesProps) {
+  // Contar mecánicas
+  const mechanicsCounts = promotions.reduce((acc, promo) => {
+    const mecanica = promo.mecanica;
+    acc[mecanica] = (acc[mecanica] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
-export const MechanicsAndPrizes = () => {
-  const [selectedMechanic, setSelectedMechanic] = useState<string>("all");
-  const [selectedPrize, setSelectedPrize] = useState<string>("all");
-  const [selectedMechanicRanking, setSelectedMechanicRanking] =
-    useState<MechanicRanking | null>(null);
-  const [selectedPrizeRanking, setSelectedPrizeRanking] =
-    useState<PrizeRanking | null>(null);
-  const [selectedPromotions, setSelectedPromotions] = useState<Promotion[]>([]);
-  const [isMechanicDialogOpen, setIsMechanicDialogOpen] = useState(false);
-  const [isPrizeDialogOpen, setIsPrizeDialogOpen] = useState(false);
-  const [mechanicViewAllOpen, setMechanicViewAllOpen] = useState(false);
-  const [prizeViewAllOpen, setPrizeViewAllOpen] = useState(false);
+  // Contar premios
+  const prizesCounts = promotions.reduce((acc, promo) => {
+    const premio = promo.premio;
+    acc[premio] = (acc[premio] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
-  // Get all promotions from mock data
-  const allPromotions = useMemo(() => {
-    const transaccionalPromos = mockPromotionsData.transaccional.flatMap(
-      (ranking) => ranking.promotions
-    );
-    const engagementPromos = mockPromotionsData.engagement.flatMap(
-      (ranking) => ranking.promotions
-    );
-    return [...transaccionalPromos, ...engagementPromos];
-  }, []);
+  // Ordenar y obtener top 5
+  const topMechanics = Object.entries(mechanicsCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5);
 
-  // Calculate mechanics rankings
-  const mechanicsRankings = useMemo(() => {
-    const mechanicsMap: { [key: string]: MechanicRanking } = {};
+  const topPrizes = Object.entries(prizesCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5);
 
-    allPromotions.forEach((promo) => {
-      const mechanicKey = promo.mechanic.toLowerCase();
-
-      if (!mechanicsMap[mechanicKey]) {
-        mechanicsMap[mechanicKey] = {
-          rank: 0,
-          title: promo.mechanic,
-          brand: promo.brand,
-          count: 0,
-          promotions: [],
-        };
-      }
-
-      mechanicsMap[mechanicKey].count++;
-      mechanicsMap[mechanicKey].promotions.push(promo);
-    });
-
-    // Convert to array and sort by count
-    const rankings = Object.values(mechanicsMap)
-      .sort((a, b) => b.count - a.count)
-      .map((item, index) => ({
-        ...item,
-        rank: index + 1,
-      }));
-
-    return rankings;
-  }, [allPromotions]);
-
-  // Calculate prizes rankings
-  const prizesRankings = useMemo(() => {
-    const prizesMap: { [key: string]: PrizeRanking } = {};
-
-    allPromotions.forEach((promo) => {
-      const prizeKey = promo.prize.toLowerCase();
-
-      if (!prizesMap[prizeKey]) {
-        prizesMap[prizeKey] = {
-          rank: 0,
-          name: promo.prize,
-          count: 0,
-          promotions: [],
-        };
-      }
-
-      prizesMap[prizeKey].count++;
-      prizesMap[prizeKey].promotions.push(promo);
-    });
-
-    // Convert to array and sort by count
-    const rankings = Object.values(prizesMap)
-      .sort((a, b) => b.count - a.count)
-      .map((item, index) => ({
-        ...item,
-        rank: index + 1,
-      }));
-
-    return rankings;
-  }, [allPromotions]);
-
-  // Get available mechanics for select
-  const availableMechanics = useMemo(() => {
-    return mechanicsRankings.map((m) => ({
-      value: m.title.toLowerCase(),
-      label: m.title,
-    }));
-  }, [mechanicsRankings]);
-
-  // Get available prizes for select
-  const availablePrizes = useMemo(() => {
-    return prizesRankings.map((p) => ({
-      value: p.name.toLowerCase(),
-      label: p.name,
-    }));
-  }, [prizesRankings]);
-
-  // Get promotions for selected mechanic
-  const mechanicPromotions = useMemo(() => {
-    if (selectedMechanic === "all") return [];
-    const ranking = mechanicsRankings.find(
-      (m) => m.title.toLowerCase() === selectedMechanic
-    );
-    return ranking?.promotions || [];
-  }, [selectedMechanic, mechanicsRankings]);
-
-  // Get promotions for selected prize
-  const prizePromotions = useMemo(() => {
-    if (selectedPrize === "all") return [];
-    const ranking = prizesRankings.find(
-      (p) => p.name.toLowerCase() === selectedPrize
-    );
-    return ranking?.promotions || [];
-  }, [selectedPrize, prizesRankings]);
-
-  const handleMechanicRankingClick = (ranking: MechanicRanking) => {
-    setSelectedMechanicRanking(ranking);
-    setIsMechanicDialogOpen(true);
-  };
-
-  const handlePrizeRankingClick = (ranking: PrizeRanking) => {
-    setSelectedPrizeRanking(ranking);
-    setIsPrizeDialogOpen(true);
-  };
-
-  const handleMechanicViewAll = () => {
-    setSelectedPromotions(mechanicPromotions);
-    setMechanicViewAllOpen(true);
-  };
-
-  const handlePrizeViewAll = () => {
-    setSelectedPromotions(prizePromotions);
-    setPrizeViewAllOpen(true);
+  // Función para acortar texto largo
+  const shortenText = (text: string, maxLength: number = 60) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
   };
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Mechanics Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Mecánicas</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Select
-              value={selectedMechanic}
-              onValueChange={setSelectedMechanic}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                {availableMechanics.map((mech) => (
-                  <SelectItem key={mech.value} value={mech.value}>
-                    {mech.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+    <Card className="p-6">
+      <h2 className="text-2xl font-bold mb-6">
+        Mecánicas y Premios Más Utilizados
+      </h2>
 
-            {selectedMechanic === "all" ? (
-              // Show mechanic rankings when "all" is selected
-              <div className="space-y-2">
-                {mechanicsRankings.map((mechanic) => (
-                  <div
-                    key={mechanic.title}
-                    onClick={() => handleMechanicRankingClick(mechanic)}
-                    className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
-                      {mechanic.rank}
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Top Mecánicas */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2 h-8 bg-blue-600 rounded"></div>
+            <h3 className="text-lg font-semibold text-slate-700">
+              Top 5 Mecánicas
+            </h3>
+          </div>
+          <div className="space-y-3">
+            {topMechanics.map(([mecanica, count], index) => {
+              const percentage =
+                promotions.length > 0 ? (count / promotions.length) * 100 : 0;
+              return (
+                <div key={mecanica} className="group">
+                  <div className="flex items-start gap-3 mb-2">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span className="text-sm font-bold text-blue-600">
+                        {index + 1}
+                      </span>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium">{mechanic.title}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {mechanic.count} promociones
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p
+                          className="text-sm font-medium text-slate-700 group-hover:text-blue-600 transition-colors"
+                          title={mecanica}
+                        >
+                          {shortenText(mecanica)}
+                        </p>
+                        <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {count}
+                          </Badge>
+                          <span className="text-sm font-semibold text-blue-600">
+                            {percentage.toFixed(0)}%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${percentage}%` }}
+                        />
                       </div>
                     </div>
-                    <Badge variant="secondary">{mechanic.count}</Badge>
                   </div>
-                ))}
-              </div>
-            ) : (
-              // Show individual promotions ranking when specific mechanic is selected
-              <div className="space-y-2">
-                {mechanicPromotions.slice(0, 5).map((promo, index) => (
-                  <div
-                    key={promo.id}
-                    className="flex items-center gap-3 p-3 rounded-lg border bg-card"
-                  >
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-medium">{promo.title}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {promo.brand}
-                      </div>
-                    </div>
-                    <Badge variant="outline">{promo.country}</Badge>
-                  </div>
-                ))}
-                {mechanicPromotions.length > 5 && (
-                  <Button
-                    onClick={handleMechanicViewAll}
-                    variant="outline"
-                    className="w-full"
-                  >
-                    Ver todas ({mechanicPromotions.length})
-                  </Button>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-        {/* Prizes Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Premios</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Select value={selectedPrize} onValueChange={setSelectedPrize}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                {availablePrizes.map((prize) => (
-                  <SelectItem key={prize.value} value={prize.value}>
-                    {prize.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {selectedPrize === "all" ? (
-              // Show prize rankings when "all" is selected
-              <div className="space-y-2">
-                {prizesRankings.map((prize) => (
-                  <div
-                    key={prize.name}
-                    onClick={() => handlePrizeRankingClick(prize)}
-                    className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
-                      {prize.rank}
+        {/* Top Premios */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2 h-8 bg-purple-600 rounded"></div>
+            <h3 className="text-lg font-semibold text-slate-700">
+              Top 5 Premios
+            </h3>
+          </div>
+          <div className="space-y-3">
+            {topPrizes.map(([premio, count], index) => {
+              const percentage =
+                promotions.length > 0 ? (count / promotions.length) * 100 : 0;
+              return (
+                <div key={premio} className="group">
+                  <div className="flex items-start gap-3 mb-2">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                      <span className="text-sm font-bold text-purple-600">
+                        {index + 1}
+                      </span>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium">{prize.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {prize.count} promociones
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p
+                          className="text-sm font-medium text-slate-700 group-hover:text-purple-600 transition-colors"
+                          title={premio}
+                        >
+                          {shortenText(premio)}
+                        </p>
+                        <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {count}
+                          </Badge>
+                          <span className="text-sm font-semibold text-purple-600">
+                            {percentage.toFixed(0)}%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-2">
+                        <div
+                          className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${percentage}%` }}
+                        />
                       </div>
                     </div>
-                    <Badge variant="secondary">{prize.count}</Badge>
                   </div>
-                ))}
-              </div>
-            ) : (
-              // Show individual promotions ranking when specific prize is selected
-              <div className="space-y-2">
-                {prizePromotions.slice(0, 5).map((promo, index) => (
-                  <div
-                    key={promo.id}
-                    className="flex items-center gap-3 p-3 rounded-lg border bg-card"
-                  >
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-medium">{promo.title}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {promo.brand}
-                      </div>
-                    </div>
-                    <Badge variant="outline">{promo.country}</Badge>
-                  </div>
-                ))}
-                {prizePromotions.length > 5 && (
-                  <Button
-                    onClick={handlePrizeViewAll}
-                    variant="outline"
-                    className="w-full"
-                  >
-                    Ver todas ({prizePromotions.length})
-                  </Button>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      {/* Mechanics Ranking Dialog (when clicking on a mechanic in "all" view) */}
-      <Dialog
-        open={isMechanicDialogOpen}
-        onOpenChange={setIsMechanicDialogOpen}
-      >
-        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl">
-              Mecánica: {selectedMechanicRanking?.title}
-            </DialogTitle>
-            <div className="text-sm text-muted-foreground">
-              Total: {selectedMechanicRanking?.count} promociones
+      {/* Insights adicionales */}
+      <div className="mt-6 pt-6 border-t border-slate-200">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center p-3 bg-blue-50 rounded-lg">
+            <div className="text-2xl font-bold text-blue-600">
+              {Object.keys(mechanicsCounts).length}
             </div>
-          </DialogHeader>
-
-          {selectedMechanicRanking && (
-            <div className="mt-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Título</TableHead>
-                    <TableHead>Marca</TableHead>
-                    <TableHead>País</TableHead>
-                    <TableHead>Categoría</TableHead>
-                    <TableHead>Premio</TableHead>
-                    <TableHead>Concepto</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {selectedMechanicRanking.promotions.map((promotion) => (
-                    <TableRow key={promotion.id}>
-                      <TableCell className="font-medium">
-                        {promotion.title}
-                      </TableCell>
-                      <TableCell>{promotion.brand}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{promotion.country}</Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {promotion.category}
-                      </TableCell>
-                      <TableCell>{promotion.prize}</TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {promotion.concept}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Prizes Ranking Dialog (when clicking on a prize in "all" view) */}
-      <Dialog open={isPrizeDialogOpen} onOpenChange={setIsPrizeDialogOpen}>
-        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl">
-              Premio: {selectedPrizeRanking?.name}
-            </DialogTitle>
-            <div className="text-sm text-muted-foreground">
-              Total: {selectedPrizeRanking?.count} promociones
-            </div>
-          </DialogHeader>
-
-          {selectedPrizeRanking && (
-            <div className="mt-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Título</TableHead>
-                    <TableHead>Marca</TableHead>
-                    <TableHead>País</TableHead>
-                    <TableHead>Categoría</TableHead>
-                    <TableHead>Mecánica</TableHead>
-                    <TableHead>Concepto</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {selectedPrizeRanking.promotions.map((promotion) => (
-                    <TableRow key={promotion.id}>
-                      <TableCell className="font-medium">
-                        {promotion.title}
-                      </TableCell>
-                      <TableCell>{promotion.brand}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{promotion.country}</Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {promotion.category}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{promotion.mechanic}</Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {promotion.concept}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* View All Mechanic Promotions Dialog */}
-      <Dialog open={mechanicViewAllOpen} onOpenChange={setMechanicViewAllOpen}>
-        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl">
-              Todas las promociones -{" "}
-              {
-                availableMechanics.find((m) => m.value === selectedMechanic)
-                  ?.label
-              }
-            </DialogTitle>
-            <div className="text-sm text-muted-foreground">
-              Total: {mechanicPromotions.length} promociones
-            </div>
-          </DialogHeader>
-
-          <div className="mt-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Título</TableHead>
-                  <TableHead>Marca</TableHead>
-                  <TableHead>País</TableHead>
-                  <TableHead>Categoría</TableHead>
-                  <TableHead>Premio</TableHead>
-                  <TableHead>Concepto</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mechanicPromotions.map((promotion) => (
-                  <TableRow key={promotion.id}>
-                    <TableCell className="font-medium">
-                      {promotion.title}
-                    </TableCell>
-                    <TableCell>{promotion.brand}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{promotion.country}</Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {promotion.category}
-                    </TableCell>
-                    <TableCell>{promotion.prize}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {promotion.concept}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="text-xs text-slate-600">Mecánicas únicas</div>
           </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* View All Prize Promotions Dialog */}
-      <Dialog open={prizeViewAllOpen} onOpenChange={setPrizeViewAllOpen}>
-        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl">
-              Todas las promociones -{" "}
-              {availablePrizes.find((p) => p.value === selectedPrize)?.label}
-            </DialogTitle>
-            <div className="text-sm text-muted-foreground">
-              Total: {prizePromotions.length} promociones
+          <div className="text-center p-3 bg-purple-50 rounded-lg">
+            <div className="text-2xl font-bold text-purple-600">
+              {Object.keys(prizesCounts).length}
             </div>
-          </DialogHeader>
-
-          <div className="mt-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Título</TableHead>
-                  <TableHead>Marca</TableHead>
-                  <TableHead>País</TableHead>
-                  <TableHead>Categoría</TableHead>
-                  <TableHead>Mecánica</TableHead>
-                  <TableHead>Concepto</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {prizePromotions.map((promotion) => (
-                  <TableRow key={promotion.id}>
-                    <TableCell className="font-medium">
-                      {promotion.title}
-                    </TableCell>
-                    <TableCell>{promotion.brand}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{promotion.country}</Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {promotion.category}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">{promotion.mechanic}</Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {promotion.concept}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="text-xs text-slate-600">Premios únicos</div>
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+          <div className="text-center p-3 bg-green-50 rounded-lg">
+            <div className="text-2xl font-bold text-green-600">
+              {topMechanics.length > 0 ? topMechanics[0][1] : 0}
+            </div>
+            <div className="text-xs text-slate-600">Mecánica más popular</div>
+          </div>
+          <div className="text-center p-3 bg-orange-50 rounded-lg">
+            <div className="text-2xl font-bold text-orange-600">
+              {topPrizes.length > 0 ? topPrizes[0][1] : 0}
+            </div>
+            <div className="text-xs text-slate-600">Premio más ofrecido</div>
+          </div>
+        </div>
+      </div>
+    </Card>
   );
-};
+}

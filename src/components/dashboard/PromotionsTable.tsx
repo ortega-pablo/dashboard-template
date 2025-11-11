@@ -1,61 +1,106 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Promotion } from "@/data/promotions-mock-data";
 
-interface Promotion {
-  id: number;
-  rank: number;
-  title: string;
-  brand: string;
-  country: string;
-  type: string;
-  category: string;
+interface PromotionsTableProps {
+  promotions: Promotion[];
 }
 
-const mockPromotions: Promotion[] = [
-  { id: 1, rank: 1, title: "Gana un viaje a París", brand: "Coca-Cola", country: "MX", type: "Transaccional", category: "Bebidas" },
-  { id: 2, rank: 2, title: "Sorteo iPhone 15", brand: "Pepsi", country: "AR", type: "Engagement", category: "Bebidas" },
-  { id: 3, rank: 3, title: "Colecciona y gana", brand: "Lay's", country: "BR", type: "Transaccional", category: "Snacks" },
-];
-
-export const PromotionsTable = () => {
+export function PromotionsTable({ promotions }: PromotionsTableProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Promos Pateado (Ranking)</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="p-6">
+      <h2 className="text-2xl font-bold mb-4">
+        Promociones Filtradas ({promotions.length})
+      </h2>
+      <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-16">Rank</TableHead>
-              <TableHead>Título</TableHead>
-              <TableHead>Marca</TableHead>
               <TableHead>País</TableHead>
-              <TableHead>Tipo</TableHead>
+              <TableHead>Marca</TableHead>
               <TableHead>Categoría</TableHead>
+              <TableHead>Tipo</TableHead>
+              <TableHead>Clasificación</TableHead>
+              <TableHead>Mecánica</TableHead>
+              <TableHead>Premio</TableHead>
+              <TableHead>Relación PepsiCo</TableHead>
+              <TableHead>Deportes</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockPromotions.map((promo) => (
+            {promotions.slice(0, 50).map((promo) => (
               <TableRow key={promo.id}>
-                <TableCell className="font-bold">#{promo.rank}</TableCell>
-                <TableCell className="font-medium">{promo.title}</TableCell>
-                <TableCell>{promo.brand}</TableCell>
-                <TableCell>
-                  <Badge variant="outline">{promo.country}</Badge>
+                <TableCell className="font-medium">
+                  {promo.pais === "BRASIL" && "🇧🇷"}
+                  {promo.pais === "CHILE" && "🇨🇱"}
+                  {promo.pais === "GUATEMALA" && "🇬🇹"}
+                  {promo.pais === "MEXICO" && "🇲🇽"}
+                  {promo.pais === "COLOMBIA" && "🇨🇴"} {promo.pais}
+                </TableCell>
+                <TableCell className="font-semibold">{promo.marca}</TableCell>
+                <TableCell className="text-sm max-w-xs truncate">
+                  {promo.categoria}
                 </TableCell>
                 <TableCell>
-                  <Badge variant={promo.type === "Transaccional" ? "default" : "secondary"}>
-                    {promo.type}
+                  <Badge
+                    variant={
+                      promo.tipoPromo === "TRANSACCIONAL"
+                        ? "default"
+                        : "secondary"
+                    }
+                  >
+                    {promo.tipoPromo}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{promo.category}</TableCell>
+                <TableCell>
+                  <Badge variant="outline">{promo.clasificacion}</Badge>
+                </TableCell>
+                <TableCell className="text-sm max-w-md truncate">
+                  {promo.mecanica}
+                </TableCell>
+                <TableCell className="text-sm max-w-md truncate">
+                  {promo.premio}
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      promo.relacionPepsico === "PEPSICO"
+                        ? "default"
+                        : promo.relacionPepsico === "COMPETENCIA DIRECTA"
+                        ? "destructive"
+                        : "secondary"
+                    }
+                  >
+                    {promo.relacionPepsico}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-1">
+                    {promo.f1 && <span title="F1">🏎️</span>}
+                    {promo.mundial && <span title="Mundial">⚽</span>}
+                    {promo.nfl && <span title="NFL">🏈</span>}
+                    {promo.uefaChampionsLeague && <span title="UEFA">🏆</span>}
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </CardContent>
+        {promotions.length > 50 && (
+          <div className="mt-4 text-center text-sm text-slate-600">
+            Mostrando 50 de {promotions.length} promociones. Descarga el CSV
+            para ver todas.
+          </div>
+        )}
+      </div>
     </Card>
   );
-};
+}
