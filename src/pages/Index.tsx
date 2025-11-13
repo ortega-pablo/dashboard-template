@@ -15,7 +15,7 @@ import { PromoTypeRanking } from "@/components/dashboard/PromoTypeRanking";
 import { MechanicsAndPrizes } from "@/components/dashboard/MechanicsAndPrizes";
 import { InspirationSection } from "@/components/dashboard/InspirationSection";
 import { PromotionsTable } from "@/components/dashboard/PromotionsTable";
-import { DateRangeFilter } from "@/components/dashboard/DateRangefilter";
+import { DateRangeFilter } from "@/components/dashboard/DateRangeFilter";
 
 type Country = "BRASIL" | "CHILE" | "GUATEMALA" | "MEXICO" | "COLOMBIA";
 
