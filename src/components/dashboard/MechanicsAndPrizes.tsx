@@ -153,25 +153,45 @@ export function MechanicsAndPrizes({ promotions }: MechanicsAndPrizesProps) {
             <div className="text-2xl font-bold text-blue-600">
               {Object.keys(mechanicsCounts).length}
             </div>
-            <div className="text-xs text-slate-600">Mecánicas únicas</div>
+            <div className="text-s pb-2 text-slate-600">Mecánicas únicas</div>
+            <div className="text-xs text-slate-400">
+              Cantidad de tipos diferentes de mecánicas utilizadas en las
+              promociones
+            </div>
           </div>
           <div className="text-center p-3 bg-destructive-foreground rounded-lg">
             <div className="text-2xl font-bold text-destructive">
               {Object.keys(prizesCounts).length}
             </div>
-            <div className="text-xs text-slate-600">Premios únicos</div>
+            <div className="text-s pb-2 text-slate-600">Premios únicos</div>
+            <div className="text-xs text-slate-400">
+              Cantidad de tipos diferentes de premios ofrecidos en las
+              promociones
+            </div>
           </div>
           <div className="text-center p-3 bg-green-50 rounded-lg">
             <div className="text-2xl font-bold text-green-600">
               {topMechanics.length > 0 ? topMechanics[0][1] : 0}
             </div>
-            <div className="text-xs text-slate-600">Mecánica más popular</div>
+            <div className="text-s pb-2 text-slate-600">
+              Mecánica más popular
+            </div>
+            <div className="text-xs text-slate-400">
+              La cantidad de promociones que utilizan la mecánica #1 (la más
+              utilizada)
+            </div>
           </div>
           <div className="text-center p-3 bg-orange-50 rounded-lg">
             <div className="text-2xl font-bold text-orange-600">
               {topPrizes.length > 0 ? topPrizes[0][1] : 0}
             </div>
-            <div className="text-xs text-slate-600">Premio más ofrecido</div>
+            <div className="text-s pb-2 text-slate-600">
+              Premio más ofrecido
+            </div>
+            <div className="text-xs text-slate-400">
+              La cantidad de promociones que ofrecen el premio #1 (el más
+              ofrecido)
+            </div>
           </div>
         </div>
       </div>

@@ -20,6 +20,7 @@ export interface Promotion {
   descripcion?: string;
   fechaInicio?: string;
   fechaFin?: string;
+  fechaAnalisis: string;
   celebrity?: string;
 }
 
@@ -151,6 +152,12 @@ function generatePromotion(index: number): Promotion {
   const usaNFL = Math.random() > 0.85;
   const usaUEFA = Math.random() > 0.82;
 
+  // Generar fecha de análisis entre enero 2024 y marzo 2025
+  const startDate = new Date(2025, 6, 1); // 1 enero 2024
+  const endDate = new Date(2025, 10, 30); // 31 marzo 2025
+  const randomTime = startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime());
+  const fechaAnalisis = new Date(randomTime).toISOString().split('T')[0];
+
   return {
     id: `promo-${index}`,
     pais,
@@ -177,6 +184,7 @@ function generatePromotion(index: number): Promotion {
       2,
       "0"
     )}-28`,
+    fechaAnalisis,
     celebrity:
       concepto === "CELEBRITIES" ? getRandomItem(celebrities) : undefined,
   };
