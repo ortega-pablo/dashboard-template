@@ -16,6 +16,7 @@ import { MechanicsAndPrizes } from "@/components/dashboard/MechanicsAndPrizes";
 import { InspirationSection } from "@/components/dashboard/InspirationSection";
 import { PromotionsTable } from "@/components/dashboard/PromotionsTable";
 import { DateRangeFilter } from "@/components/dashboard/DateRangeFilter";
+import { CategoryRanking } from "@/components/dashboard/CategoryRanking";
 
 type Country = "BRASIL" | "CHILE" | "GUATEMALA" | "MEXICO" | "COLOMBIA";
 
@@ -256,17 +257,6 @@ export default function Index() {
 
           {/* TAB 1: LATAM */}
           <TabsContent value="latam" className="space-y-6">
-            {/* Filtro de período */}
-            <DateRangeFilter
-              startDate={startDate}
-              endDate={endDate}
-              onStartDateChange={setStartDate}
-              onEndDateChange={setEndDate}
-              onClearFilter={clearDateFilter}
-              totalPromotions={mockPromotions.length}
-              filteredPromotions={filteredPromotions.length}
-            />
-
             {/* Banderas (solo visualización, no clickeables) */}
             <Card className="p-6">
               <h2 className="text-2xl font-bold mb-4">Distribución por País</h2>
@@ -306,11 +296,16 @@ export default function Index() {
               </div>
             </Card>
 
-            {/* Tipo de Promo */}
-            <PromoTypeRanking promotions={filteredPromotions} />
-
-            {/* Mecánicas y Premios */}
-            <MechanicsAndPrizes promotions={filteredPromotions} />
+            {/* Filtro de período */}
+            <DateRangeFilter
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+              onClearFilter={clearDateFilter}
+              totalPromotions={mockPromotions.length}
+              filteredPromotions={filteredPromotions.length}
+            />
 
             {/* Filtros de Categorías (renglón completo) */}
             <Card className="p-6">
@@ -373,8 +368,6 @@ export default function Index() {
                 )}
               </div>
             </Card>
-
-            <InspirationSection promotions={filteredPromotions} />
 
             {/* Deportes */}
             <Card className="p-6">
@@ -458,6 +451,17 @@ export default function Index() {
                 ))}
               </div>
             </Card>
+
+            {/* Tipo de Promo */}
+            <PromoTypeRanking promotions={filteredPromotions} />
+
+            {/* Ranking de Categorías */}
+            <CategoryRanking promotions={filteredPromotions} />
+
+            {/* Mecánicas y Premios */}
+            <MechanicsAndPrizes promotions={filteredPromotions} />
+
+            <InspirationSection promotions={filteredPromotions} />
 
             {/* Insights IA (al final) */}
             <Card className="p-6 bg-gradient-to-br from-purple-50 to-blue-50">
@@ -601,6 +605,7 @@ export default function Index() {
                 </Card>
 
                 <PromoTypeRanking promotions={filteredPromotions} />
+                <CategoryRanking promotions={filteredPromotions} />
                 <MechanicsAndPrizes promotions={filteredPromotions} />
 
                 {/* Deportes para el país */}
