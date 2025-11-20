@@ -17,6 +17,7 @@ import { InspirationSection } from "@/components/dashboard/InspirationSection";
 import { PromotionsTable } from "@/components/dashboard/PromotionsTable";
 import { DateRangeFilter } from "@/components/dashboard/DateRangeFilter";
 import { CategoryRanking } from "@/components/dashboard/CategoryRanking";
+import { SportsModal } from "@/components/dashboard/SportsModal";
 
 type Country = "BRASIL" | "CHILE" | "GUATEMALA" | "MEXICO" | "COLOMBIA";
 
@@ -398,30 +399,45 @@ export default function Index() {
                   }).length;
 
                   return (
-                    <Button
+                    <div
                       key={deporte.id}
-                      variant={
-                        selectedDeportes.includes(deporte.id)
-                          ? "default"
-                          : "outline"
-                      }
-                      onClick={() => {
-                        setSelectedDeportes((prev) =>
-                          prev.includes(deporte.id)
-                            ? prev.filter((d) => d !== deporte.id)
-                            : [...prev, deporte.id]
-                        );
-                      }}
-                      className="h-30 flex flex-col items-center justify-center gap-2"
+                      className="flex flex-col items-center justify-center p-4 border-2 border-slate-200 rounded-lg hover:border-blue-400 transition-all bg-white"
                     >
-                      <span className="text-3xl">{deporte.icon}</span>
-                      <span className="font-semibold">{deporte.nombre}</span>
-                      <span className="text-sm mb-2">{count} promos</span>
-                    </Button>
+                      <Button
+                        variant={
+                          selectedDeportes.includes(deporte.id)
+                            ? "default"
+                            : "outline"
+                        }
+                        onClick={() => {
+                          setSelectedDeportes((prev) =>
+                            prev.includes(deporte.id)
+                              ? prev.filter((d) => d !== deporte.id)
+                              : [...prev, deporte.id]
+                          );
+                        }}
+                        className="w-full h-auto flex flex-col items-center justify-center gap-2 mb-2"
+                      >
+                        <span className="text-3xl">{deporte.icon}</span>
+                        <span className="font-semibold">{deporte.nombre}</span>
+                        <span className="text-sm">{count} promos</span>
+                      </Button>
+                      <SportsModal
+                        deporte={deporte}
+                        promotions={mockPromotions}
+                        count={count}
+                      />
+                    </div>
                   );
                 })}
               </div>
             </Card>
+
+            {/* Tipo de Promo */}
+            <PromoTypeRanking promotions={filteredPromotions} />
+
+            {/* Ranking de Categorías */}
+            <CategoryRanking promotions={filteredPromotions} />
 
             {/* Celebrities */}
             <Card className="p-6">
@@ -451,12 +467,6 @@ export default function Index() {
                 ))}
               </div>
             </Card>
-
-            {/* Tipo de Promo */}
-            <PromoTypeRanking promotions={filteredPromotions} />
-
-            {/* Ranking de Categorías */}
-            <CategoryRanking promotions={filteredPromotions} />
 
             {/* Mecánicas y Premios */}
             <MechanicsAndPrizes promotions={filteredPromotions} />
@@ -626,13 +636,20 @@ export default function Index() {
                       return (
                         <div
                           key={deporte.id}
-                          className="text-center p-4 bg-slate-50 rounded-lg"
+                          className="flex flex-col items-center justify-center p-4 border-2 border-slate-200 rounded-lg hover:border-blue-400 transition-all bg-white"
                         >
                           <div className="text-3xl mb-2">{deporte.icon}</div>
-                          <div className="font-semibold">{deporte.nombre}</div>
-                          <div className="text-2xl font-bold text-blue-600">
+                          <div className="font-semibold text-center mb-2">
+                            {deporte.nombre}
+                          </div>
+                          <div className="text-2xl font-bold text-blue-600 mb-2">
                             {count}
                           </div>
+                          <SportsModal
+                            deporte={deporte}
+                            promotions={filteredPromotions}
+                            count={count}
+                          />
                         </div>
                       );
                     })}
